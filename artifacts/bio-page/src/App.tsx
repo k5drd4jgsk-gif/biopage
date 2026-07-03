@@ -3,6 +3,18 @@ import { useEffect, useRef, useState } from "react";
 const TELEGRAM_URL = "https://t.me/username";
 const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
 
+// Paste a YouTube video URL here to use it as a background (leave empty for no video)
+// Example: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+const YOUTUBE_URL = "";
+
+function getYouTubeId(url: string): string | null {
+  if (!url) return null;
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
 function TelegramIcon() {
   return (
     <svg
@@ -85,9 +97,55 @@ function ParticleCanvas() {
   );
 }
 
+function YouTubeBackground({ videoId }: { videoId: string }) {
+  const src =
+    `https://www.youtube-nocookie.com/embed/${videoId}` +
+    `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
+    `&controls=0&disablekb=1&fs=0&modestbranding=1&playsinline=1&rel=0&showinfo=0&iv_load_policy=3`;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        overflow: "hidden",
+      }}
+    >
+      <iframe
+        src={src}
+        allow="autoplay; encrypted-media"
+        allowFullScreen={false}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "177.78vh",
+          height: "56.25vw",
+          minWidth: "100%",
+          minHeight: "100%",
+          transform: "translate(-50%, -50%)",
+          border: "none",
+          pointerEvents: "none",
+          opacity: 0.35,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(0,0,0,0.55)",
+        }}
+      />
+    </div>
+  );
+}
+
 export default function App() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [hovered, setHovered] = useState(false);
+
+  const videoId = getYouTubeId(YOUTUBE_URL);
 
   return (
     <div
@@ -98,12 +156,11 @@ export default function App() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        fontFamily: "'QuorthonBlack', sans-serif",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      <ParticleCanvas />
+      {videoId ? <YouTubeBackground videoId={videoId} /> : <ParticleCanvas />}
 
       <div
         style={{
@@ -117,13 +174,7 @@ export default function App() {
         }}
       >
         {/* Avatar */}
-        <div
-          style={{
-            position: "relative",
-            width: 148,
-            height: 148,
-          }}
-        >
+        <div style={{ position: "relative", width: 148, height: 148 }}>
           <div
             style={{
               position: "absolute",
@@ -199,10 +250,11 @@ export default function App() {
               : "rgba(255,255,255,0.04)",
             color: "#fff",
             textDecoration: "none",
-            fontSize: "clamp(13px, 2.5vw, 15px)",
-            letterSpacing: "0.12em",
-            fontFamily: "'QuorthonBlack', sans-serif",
-            transition: "background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+            fontSize: "clamp(14px, 2.5vw, 16px)",
+            letterSpacing: "0.08em",
+            fontFamily: "'FallingSkyBlk', sans-serif",
+            transition:
+              "background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
             transform: hovered ? "translateY(-1px)" : "translateY(0)",
             boxShadow: hovered
               ? "0 8px 32px rgba(255,255,255,0.06)"

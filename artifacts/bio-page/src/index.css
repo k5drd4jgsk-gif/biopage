@@ -8,6 +8,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'FallingSkyBlk';
+  src: url('/FallingSkyBlk.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;

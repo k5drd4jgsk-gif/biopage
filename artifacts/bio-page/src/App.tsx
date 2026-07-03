@@ -97,40 +97,26 @@ function ParticleCanvas() {
   );
 }
 
-function YouTubeBackground({ videoId }: { videoId: string }) {
+function YouTubeAudio({ videoId }: { videoId: string }) {
   const src =
     `https://www.youtube-nocookie.com/embed/${videoId}` +
-    `?autoplay=1&mute=1&loop=1&playlist=${videoId}` +
+    `?autoplay=1&loop=1&playlist=${videoId}` +
     `&controls=0&disablekb=1&fs=0&modestbranding=1&playsinline=1&rel=0&showinfo=0&iv_load_policy=3`;
 
   return (
-    <div
+    <iframe
+      src={src}
+      allow="autoplay; encrypted-media"
+      allowFullScreen={false}
       style={{
         position: "fixed",
-        inset: 0,
-        zIndex: 0,
-        overflow: "hidden",
+        width: 1,
+        height: 1,
+        opacity: 0,
+        pointerEvents: "none",
+        border: "none",
       }}
-    >
-      <iframe
-        src={src}
-        allow="autoplay; encrypted-media"
-        allowFullScreen={false}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          width: "177.78vh",
-          height: "56.25vw",
-          minWidth: "100%",
-          minHeight: "100%",
-          transform: "translate(-50%, -50%)",
-          border: "none",
-          pointerEvents: "none",
-          opacity: 0.35,
-        }}
-      />
-    </div>
+    />
   );
 }
 
@@ -153,7 +139,7 @@ export default function App() {
         overflow: "hidden",
       }}
     >
-      {videoId && <YouTubeBackground videoId={videoId} />}
+      {videoId && <YouTubeAudio videoId={videoId} />}
       <ParticleCanvas />
 
       <div

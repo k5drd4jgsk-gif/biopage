@@ -204,10 +204,23 @@ export default function App() {
   const [introComplete, setIntroComplete] = useState(false);
 
   function handleCopyUsername() {
-    navigator.clipboard.writeText("@username").then(() => {
+    const text = "@username";
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1800);
+      });
+    } else {
+      const el = document.createElement("textarea");
+      el.value = text;
+      el.style.cssText = "position:fixed;opacity:0;pointer-events:none;";
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
-    });
+    }
   }
 
   useEffect(() => {

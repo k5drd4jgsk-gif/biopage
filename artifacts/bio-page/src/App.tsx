@@ -130,13 +130,6 @@ function YouTubeBackground({ videoId }: { videoId: string }) {
           opacity: 0.35,
         }}
       />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "rgba(0,0,0,0.55)",
-        }}
-      />
     </div>
   );
 }
@@ -160,7 +153,8 @@ export default function App() {
         overflow: "hidden",
       }}
     >
-      {videoId ? <YouTubeBackground videoId={videoId} /> : <ParticleCanvas />}
+      {videoId && <YouTubeBackground videoId={videoId} />}
+      <ParticleCanvas />
 
       <div
         style={{

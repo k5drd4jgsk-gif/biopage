@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const TELEGRAM_URL = "https://t.me/username";
+const TELEGRAM_URL = "https://t.me/serbiasim";
 const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
 
 // Paste a YouTube video URL here to play audio on page load (leave empty for none)
@@ -8,7 +8,7 @@ const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
 const YOUTUBE_URL = "";
 
 // Browser tab title
-const PAGE_TITLE = "your name";
+const PAGE_TITLE = "dread";
 
 // Favicon — paste any image URL, or use a file you've dropped into public/ (e.g. "/favicon.png")
 // Leave empty to keep the default
@@ -207,7 +207,7 @@ export default function App() {
   const [introComplete, setIntroComplete] = useState(false);
 
   function handleCopyUsername() {
-    const text = "@username";
+    const text = "@ft.paradise";
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(() => {
         setCopied(true);
@@ -292,7 +292,7 @@ export default function App() {
         {/* Name / handle */}
         <div style={{ textAlign: "center" }}>
           <div style={{ color: "#fff", fontSize: "clamp(22px, 5vw, 30px)", letterSpacing: "0.06em", fontFamily: "'QuorthonBlack', sans-serif", lineHeight: 1.1 }}>
-            your name
+            dread
           </div>
           <div
             onClick={handleCopyUsername}
@@ -310,7 +310,7 @@ export default function App() {
               display: "flex", alignItems: "center", gap: "6px",
             }}
           >
-            {copied ? "copied!" : "@username"}
+            {copied ? "copied!" : "@ft.paradise"}
             {!copied && (
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />

@@ -2,18 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 const TELEGRAM_URL = "https://t.me/serbiasim";
-const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
+const IMAGE_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
 
 // Paste a YouTube video URL here to play audio on page load (leave empty for none)
 // Example: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-const YOUTUBE_URL = "";
+const YOUTUBE_URL = "https://youtu.be/wVMrSszssyo?si=K3G_rdsh_e523pYz";
 
 // Browser tab title
 const PAGE_TITLE = "dread";
 
 // Favicon — paste any image URL, or use a file you've dropped into public/ (e.g. "/favicon.png")
 // Leave empty to keep the default
-const FAVICON_URL = "";
+const FAVICON_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
 
 function getYouTubeId(url: string): string | null {
   if (!url) return null;

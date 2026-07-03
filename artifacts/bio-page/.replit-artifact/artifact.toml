@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Bio Page"
+version = "1.0.0"
+id = "artifacts/bio-page"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21098
+
+[services.development]
+run = "pnpm --filter @workspace/bio-page run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bio-page", "run", "build" ]
+publicDir = "artifacts/bio-page/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21098"
+BASE_PATH = "/"

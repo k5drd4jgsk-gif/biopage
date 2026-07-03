@@ -1,0 +1,229 @@
+import { useEffect, useRef, useState } from "react";
+
+const TELEGRAM_URL = "https://t.me/username";
+const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
+
+function TelegramIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      width="18"
+      height="18"
+    >
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+    </svg>
+  );
+}
+
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let w = (canvas.width = window.innerWidth);
+    let h = (canvas.height = window.innerHeight);
+
+    const particles: { x: number; y: number; r: number; vx: number; vy: number; alpha: number }[] = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.5 + 0.3,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        alpha: Math.random() * 0.35 + 0.05,
+      });
+    }
+
+    function draw() {
+      ctx!.clearRect(0, 0, w, h);
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+        ctx!.beginPath();
+        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(255,255,255,${p.alpha})`;
+        ctx!.fill();
+      }
+      animId = requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    const onResize = () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    />
+  );
+}
+
+export default function App() {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      style={{
+        minHeight: "100dvh",
+        background: "#000",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'QuorthonBlack', sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <ParticleCanvas />
+
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "28px",
+          padding: "40px 24px",
+        }}
+      >
+        {/* Avatar */}
+        <div
+          style={{
+            position: "relative",
+            width: 148,
+            height: 148,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: -3,
+              borderRadius: "50%",
+              background: "conic-gradient(from 180deg, #ffffff18, #ffffff55, #ffffff18)",
+              filter: "blur(1px)",
+              animation: "spin 8s linear infinite",
+            }}
+          />
+          <img
+            src={IMAGE_URL}
+            alt="profile"
+            onLoad={() => setImgLoaded(true)}
+            style={{
+              position: "relative",
+              width: 148,
+              height: 148,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid rgba(255,255,255,0.12)",
+              display: "block",
+              opacity: imgLoaded ? 1 : 0,
+              transition: "opacity 0.6s ease",
+              boxShadow: "0 0 40px rgba(255,255,255,0.07)",
+            }}
+          />
+        </div>
+
+        {/* Name / handle */}
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              color: "#fff",
+              fontSize: "clamp(22px, 5vw, 30px)",
+              letterSpacing: "0.06em",
+              fontFamily: "'QuorthonBlack', sans-serif",
+              lineHeight: 1.1,
+            }}
+          >
+            your name
+          </div>
+          <div
+            style={{
+              marginTop: 8,
+              color: "rgba(255,255,255,0.38)",
+              fontSize: "clamp(12px, 2.5vw, 14px)",
+              letterSpacing: "0.18em",
+              fontFamily: "'QuorthonBlack', sans-serif",
+              textTransform: "uppercase",
+            }}
+          >
+            @username
+          </div>
+        </div>
+
+        {/* Telegram button */}
+        <a
+          href={TELEGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "13px 32px",
+            borderRadius: "100px",
+            border: "1px solid rgba(255,255,255,0.14)",
+            background: hovered
+              ? "rgba(255,255,255,0.09)"
+              : "rgba(255,255,255,0.04)",
+            color: "#fff",
+            textDecoration: "none",
+            fontSize: "clamp(13px, 2.5vw, 15px)",
+            letterSpacing: "0.12em",
+            fontFamily: "'QuorthonBlack', sans-serif",
+            transition: "background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+            transform: hovered ? "translateY(-1px)" : "translateY(0)",
+            boxShadow: hovered
+              ? "0 8px 32px rgba(255,255,255,0.06)"
+              : "0 2px 12px rgba(0,0,0,0.4)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <TelegramIcon />
+          Telegram
+        </a>
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}

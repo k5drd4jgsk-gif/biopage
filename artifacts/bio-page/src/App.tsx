@@ -24,15 +24,112 @@ function getYouTubeId(url: string): string | null {
 
 function TelegramIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      width="18"
-      height="18"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
     </svg>
+  );
+}
+
+function FolderIntro({ onDone }: { onDone: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2400);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 100,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      background: "#000",
+      animation: "introFadeOut 0.55s ease forwards 1.85s",
+    }}>
+      <div style={{
+        position: "relative",
+        width: 140, height: 110,
+        animation: "folderZoom 0.55s ease forwards 1.85s",
+        perspective: "400px",
+      }}>
+        {/* Inner glow */}
+        <div style={{
+          position: "absolute",
+          left: "50%", top: "54%",
+          transform: "translate(-50%, -50%)",
+          width: 120, height: 80,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 50%, transparent 75%)",
+          filter: "blur(8px)",
+          animation: "glowPulse 1.1s ease forwards 0.6s",
+          opacity: 0,
+          zIndex: 1,
+        }} />
+
+        {/* Folder tab */}
+        <div style={{
+          position: "absolute",
+          top: 0, left: 12,
+          width: 48, height: 18,
+          borderRadius: "6px 6px 0 0",
+          background: "#1a1a1a",
+          border: "1px solid rgba(255,255,255,0.18)",
+          borderBottom: "none",
+          animation: "folderAppear 0.35s ease forwards",
+          opacity: 0,
+          zIndex: 2,
+        }} />
+
+        {/* Folder body */}
+        <div style={{
+          position: "absolute",
+          top: 14, left: 0,
+          width: 140, height: 96,
+          borderRadius: "4px 8px 8px 8px",
+          background: "#111",
+          border: "1px solid rgba(255,255,255,0.16)",
+          animation: "folderAppear 0.35s ease forwards",
+          opacity: 0,
+          zIndex: 2,
+        }} />
+
+        {/* Folder flap (opens upward) */}
+        <div style={{
+          position: "absolute",
+          top: 14, left: 0,
+          width: 140, height: 48,
+          borderRadius: "4px 8px 0 0",
+          background: "#1c1c1c",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          transformOrigin: "bottom center",
+          animation: "flapOpen 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.45s",
+          zIndex: 4,
+          backfaceVisibility: "hidden",
+        }} />
+      </div>
+
+      <style>{`
+        @keyframes folderAppear {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes flapOpen {
+          0%   { transform: perspective(400px) rotateX(0deg); }
+          100% { transform: perspective(400px) rotateX(-115deg); }
+        }
+        @keyframes glowPulse {
+          0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+          45%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+          100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+        }
+        @keyframes introFadeOut {
+          from { opacity: 1; }
+          to   { opacity: 0; pointer-events: none; }
+        }
+        @keyframes folderZoom {
+          from { transform: scale(1); }
+          to   { transform: scale(1.6); }
+        }
+      `}</style>
+    </div>
   );
 }
 
@@ -64,12 +161,9 @@ function ParticleCanvas() {
     function draw() {
       ctx!.clearRect(0, 0, w, h);
       for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx!.fillStyle = `rgba(255,255,255,${p.alpha})`;
@@ -79,29 +173,12 @@ function ParticleCanvas() {
     }
 
     draw();
-
-    const onResize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    };
+    const onResize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
     window.addEventListener("resize", onResize);
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", onResize);
-    };
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", onResize); };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "fixed",
-        inset: 0,
-        pointerEvents: "none",
-        zIndex: 0,
-      }}
-    />
-  );
+  return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }} />;
 }
 
 function YouTubeAudio({ videoId }: { videoId: string }) {
@@ -115,14 +192,7 @@ function YouTubeAudio({ videoId }: { videoId: string }) {
       src={src}
       allow="autoplay; encrypted-media"
       allowFullScreen={false}
-      style={{
-        position: "fixed",
-        width: 1,
-        height: 1,
-        opacity: 0,
-        pointerEvents: "none",
-        border: "none",
-      }}
+      style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none", border: "none" }}
     />
   );
 }
@@ -131,6 +201,7 @@ export default function App() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
 
   function handleCopyUsername() {
     navigator.clipboard.writeText("@username").then(() => {
@@ -153,18 +224,9 @@ export default function App() {
   const videoId = getYouTubeId(YOUTUBE_URL);
 
   return (
-    <div
-      style={{
-        minHeight: "100dvh",
-        background: "#000",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div style={{ minHeight: "100dvh", background: "#000", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+      <FolderIntro onDone={() => setIntroComplete(true)} />
+
       {videoId && <YouTubeAudio videoId={videoId} />}
       <ParticleCanvas />
 
@@ -177,34 +239,28 @@ export default function App() {
           alignItems: "center",
           gap: "28px",
           padding: "40px 24px",
+          opacity: introComplete ? 1 : 0,
+          transform: introComplete ? "translateY(0)" : "translateY(10px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
         }}
       >
         {/* Avatar */}
         <div style={{ position: "relative", width: 148, height: 148 }}>
-          <div
-            style={{
-              position: "absolute",
-              inset: -3,
-              borderRadius: "50%",
-              background: "conic-gradient(from 180deg, #ffffff18, #ffffff55, #ffffff18)",
-              filter: "blur(1px)",
-              animation: "spin 8s linear infinite",
-            }}
-          />
+          <div style={{
+            position: "absolute", inset: -3, borderRadius: "50%",
+            background: "conic-gradient(from 180deg, #ffffff18, #ffffff55, #ffffff18)",
+            filter: "blur(1px)",
+            animation: "spin 8s linear infinite",
+          }} />
           <img
             src={IMAGE_URL}
             alt="profile"
             onLoad={() => setImgLoaded(true)}
             style={{
-              position: "relative",
-              width: 148,
-              height: 148,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "2px solid rgba(255,255,255,0.12)",
-              display: "block",
-              opacity: imgLoaded ? 1 : 0,
-              transition: "opacity 0.6s ease",
+              position: "relative", width: 148, height: 148,
+              borderRadius: "50%", objectFit: "cover",
+              border: "2px solid rgba(255,255,255,0.12)", display: "block",
+              opacity: imgLoaded ? 1 : 0, transition: "opacity 0.6s ease",
               boxShadow: "0 0 40px rgba(255,255,255,0.07)",
             }}
           />
@@ -212,15 +268,7 @@ export default function App() {
 
         {/* Name / handle */}
         <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              color: "#fff",
-              fontSize: "clamp(22px, 5vw, 30px)",
-              letterSpacing: "0.06em",
-              fontFamily: "'QuorthonBlack', sans-serif",
-              lineHeight: 1.1,
-            }}
-          >
+          <div style={{ color: "#fff", fontSize: "clamp(22px, 5vw, 30px)", letterSpacing: "0.06em", fontFamily: "'QuorthonBlack', sans-serif", lineHeight: 1.1 }}>
             your name
           </div>
           <div
@@ -236,9 +284,7 @@ export default function App() {
               cursor: "pointer",
               transition: "color 0.2s ease",
               userSelect: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
+              display: "flex", alignItems: "center", gap: "6px",
             }}
           >
             {copied ? "copied!" : "@username"}
@@ -259,30 +305,18 @@ export default function App() {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "13px 32px",
-            borderRadius: "100px",
+            display: "flex", alignItems: "center", gap: "10px",
+            padding: "13px 32px", borderRadius: "100px",
             border: "1px solid rgba(255,255,255,0.14)",
-            background: hovered
-              ? "rgba(255,255,255,0.09)"
-              : "rgba(255,255,255,0.04)",
-            color: "#fff",
-            textDecoration: "none",
-            fontSize: "clamp(14px, 2.5vw, 16px)",
-            letterSpacing: "0.08em",
+            background: hovered ? "rgba(255,255,255,0.09)" : "rgba(255,255,255,0.04)",
+            color: "#fff", textDecoration: "none",
+            fontSize: "clamp(14px, 2.5vw, 16px)", letterSpacing: "0.08em",
             fontFamily: "'FallingSkyBlk', sans-serif",
-            transition:
-              "background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
+            transition: "background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease",
             transform: hovered ? "translateY(-1px)" : "translateY(0)",
-            boxShadow: hovered
-              ? "0 8px 32px rgba(255,255,255,0.06)"
-              : "0 2px 12px rgba(0,0,0,0.4)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
+            boxShadow: hovered ? "0 8px 32px rgba(255,255,255,0.06)" : "0 2px 12px rgba(0,0,0,0.4)",
+            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            cursor: "pointer", whiteSpace: "nowrap",
           }}
         >
           <TelegramIcon />
@@ -293,7 +327,7 @@ export default function App() {
       <style>{`
         @keyframes spin {
           from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          to   { transform: rotate(360deg); }
         }
       `}</style>
     </div>

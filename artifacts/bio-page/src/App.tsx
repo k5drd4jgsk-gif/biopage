@@ -276,7 +276,7 @@ export default function App() {
             title="Click to copy"
             style={{
               marginTop: 8,
-              color: copied ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.38)",
+              color: copied ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
               fontSize: "clamp(12px, 2.5vw, 14px)",
               letterSpacing: "0.18em",
               fontFamily: "'FallingSkyBlk', sans-serif",

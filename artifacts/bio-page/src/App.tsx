@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 const TELEGRAM_URL = "https://t.me/serbiasim";
 const IMAGE_URL = "https://i.ibb.co/cKQWdhXD/IMG-6883.png";
@@ -189,9 +190,7 @@ function YouTubeAudio({ videoId }: { videoId: string }) {
 
   useEffect(() => {
     const start = () => {
-      setActive(true);
-      document.removeEventListener("touchstart", start);
-      document.removeEventListener("click", start);
+      flushSync(() => setActive(true));
     };
     document.addEventListener("touchstart", start, { once: true });
     document.addEventListener("click", start, { once: true });

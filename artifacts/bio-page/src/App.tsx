@@ -70,8 +70,9 @@ function FolderIntro({ onDone }: { onDone: () => void }) {
           width: 48, height: 18,
           borderRadius: "6px 6px 0 0",
           background: "#1a1a1a",
-          border: "1px solid rgba(255,255,255,0.18)",
+          border: "1.5px solid #cc0000",
           borderBottom: "none",
+          boxShadow: "0 0 8px #ff000066",
           animation: "folderAppear 0.35s ease forwards",
           opacity: 0,
           zIndex: 2,
@@ -83,8 +84,9 @@ function FolderIntro({ onDone }: { onDone: () => void }) {
           top: 14, left: 0,
           width: 140, height: 96,
           borderRadius: "4px 8px 8px 8px",
-          background: "#111",
-          border: "1px solid rgba(255,255,255,0.16)",
+          background: "#0d0d0d",
+          border: "1.5px solid #cc0000",
+          boxShadow: "0 0 16px #ff000055, inset 0 0 20px #ff00000a",
           animation: "folderAppear 0.35s ease forwards",
           opacity: 0,
           zIndex: 2,
@@ -96,9 +98,10 @@ function FolderIntro({ onDone }: { onDone: () => void }) {
           top: 14, left: 0,
           width: 140, height: 48,
           borderRadius: "4px 8px 0 0",
-          background: "#1c1c1c",
-          border: "1px solid rgba(255,255,255,0.2)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          background: "#161616",
+          border: "1.5px solid #cc0000",
+          borderBottom: "1px solid #ff000033",
+          boxShadow: "0 0 12px #ff000055",
           transformOrigin: "bottom center",
           animation: "flapOpen 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.45s",
           zIndex: 4,
@@ -258,23 +261,30 @@ export default function App() {
         }}
       >
         {/* Avatar */}
-        <div style={{ position: "relative", width: 148, height: 148 }}>
+        <div style={{ position: "relative", width: 190, height: 190 }}>
+          {/* Outer red spinning ring */}
           <div style={{
-            position: "absolute", inset: -4, borderRadius: "50%",
-            background: "conic-gradient(from 180deg, #ff000040, #ff0000cc, #ff000040)",
-            filter: "blur(2px)",
-            animation: "spin 8s linear infinite, redPulse 1.6s ease-in-out infinite",
+            position: "absolute", inset: -6, borderRadius: "50%",
+            background: "conic-gradient(from 180deg, #ff000020, #ff0000dd, #ff000020)",
+            filter: "blur(3px)",
+            animation: "spin 6s linear infinite, redPulse 1.6s ease-in-out infinite",
+          }} />
+          {/* Static dark border ring */}
+          <div style={{
+            position: "absolute", inset: -2, borderRadius: "50%",
+            border: "1px solid rgba(255,0,0,0.2)",
+            boxShadow: "0 0 30px rgba(255,0,0,0.15), inset 0 0 30px rgba(0,0,0,0.6)",
           }} />
           <img
             src={IMAGE_URL}
             alt="profile"
             onLoad={() => setImgLoaded(true)}
             style={{
-              position: "relative", width: 148, height: 148,
+              position: "relative", width: 190, height: 190,
               borderRadius: "50%", objectFit: "cover",
-              border: "2px solid rgba(255,255,255,0.12)", display: "block",
-              opacity: imgLoaded ? 1 : 0, transition: "opacity 0.6s ease",
-              boxShadow: "0 0 40px rgba(255,255,255,0.07)",
+              border: "2px solid rgba(255,0,0,0.18)", display: "block",
+              opacity: imgLoaded ? 1 : 0, transition: "opacity 0.7s ease",
+              boxShadow: "0 0 60px rgba(255,0,0,0.12), 0 0 120px rgba(255,0,0,0.05)",
             }}
           />
         </div>
@@ -289,7 +299,7 @@ export default function App() {
             title="Click to copy"
             style={{
               marginTop: 8,
-              color: copied ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
+              color: copied ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.38)",
               fontSize: "clamp(12px, 2.5vw, 14px)",
               letterSpacing: "0.18em",
               fontFamily: "'FallingSkyBlk', sans-serif",

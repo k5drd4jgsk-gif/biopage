@@ -6,7 +6,7 @@ const IMAGE_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
 
 // Paste a YouTube video URL here to play audio on page load (leave empty for none)
 // Example: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-const YOUTUBE_URL = "https://youtu.be/wVMrSszssyo?si=K3G_rdsh_e523pYz";
+const YOUTUBE_URL = "https://youtu.be/PBKTrq7PgkU?is=jMIY5YYSLmlwMcWi";
 
 // Browser tab title
 const PAGE_TITLE = "dread";

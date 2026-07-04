@@ -12,6 +12,10 @@ function getCST() {
   };
 }
 
+const CARD_W = 22;
+const CARD_H = 30;
+const FONT   = 19;
+
 function FlipCard({ digit, prev }: { digit: string; prev: string }) {
   const [flipping, setFlipping] = useState(false);
   const savedPrev = useRef(prev);
@@ -19,48 +23,48 @@ function FlipCard({ digit, prev }: { digit: string; prev: string }) {
   useEffect(() => {
     if (digit !== savedPrev.current) {
       setFlipping(true);
-      const t = setTimeout(() => { setFlipping(false); savedPrev.current = digit; }, 380);
+      const t = setTimeout(() => { setFlipping(false); savedPrev.current = digit; }, 360);
       return () => clearTimeout(t);
     }
   }, [digit]);
 
-  const cardStyle: React.CSSProperties = {
-    position: "relative", width: 28, height: 40, borderRadius: 5,
-    background: "transparent", perspective: 180,
-    display: "inline-block",
-  };
-  const halfBase: React.CSSProperties = {
-    position: "absolute", left: 0, width: "100%", height: "50%",
-    background: "#1a1a1a", color: "#fff",
-    fontSize: 22, fontWeight: 700, fontFamily: "'Courier New', Courier, monospace",
-    display: "flex", justifyContent: "center", overflow: "hidden",
-    backfaceVisibility: "hidden", borderRadius: 5,
+  const face: React.CSSProperties = {
+    position: "absolute", inset: 0,
+    background: "#1c1c1c",
+    borderRadius: 4,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    color: "#fff",
+    fontSize: FONT, fontWeight: 700,
+    fontFamily: "'Courier New', Courier, monospace",
+    lineHeight: 1,
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.4)",
   };
 
   return (
-    <div style={cardStyle}>
-      {/* Static top half */}
-      <div style={{ ...halfBase, top: 0, alignItems: "flex-end", borderBottom: "1px solid rgba(0,0,0,0.5)" }}>{digit}</div>
-      {/* Static bottom half */}
-      <div style={{ ...halfBase, bottom: 0, alignItems: "flex-start" }}>{digit}</div>
-
-      {flipping && <>
-        {/* Old top flips away */}
+    <div style={{
+      position: "relative", width: CARD_W, height: CARD_H,
+      display: "inline-block", flexShrink: 0,
+      perspective: 200,
+    }}>
+      {/* Static face — always shows current digit */}
+      <div style={face}>{digit}</div>
+      {/* Flip overlay — shows old digit, then rotates away */}
+      {flipping && (
         <div style={{
-          ...halfBase, top: 0, alignItems: "flex-end",
-          borderBottom: "1px solid rgba(0,0,0,0.5)",
-          transformOrigin: "bottom center",
-          animation: "fcFlipTop 0.38s ease-in forwards",
-          zIndex: 3,
+          ...face,
+          zIndex: 4,
+          transformOrigin: "center center",
+          animation: "fcFlipAway 0.36s ease-in forwards",
         }}>{savedPrev.current}</div>
-        {/* New bottom flips in */}
-        <div style={{
-          ...halfBase, bottom: 0, alignItems: "flex-start",
-          transformOrigin: "top center",
-          animation: "fcFlipBot 0.38s ease-out forwards",
-          zIndex: 3,
-        }}>{digit}</div>
-      </>}
+      )}
+      <style>{`
+        @keyframes fcFlipAway {
+          0%   { transform: rotateX(0deg);   opacity: 1; }
+          45%  { transform: rotateX(-90deg); opacity: 1; }
+          46%  { opacity: 0; }
+          100% { transform: rotateX(-90deg); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 }
@@ -68,11 +72,10 @@ function FlipCard({ digit, prev }: { digit: string; prev: string }) {
 function DigitPair({ value }: { value: string }) {
   const p0 = useRef(value[0]);
   const p1 = useRef(value[1]);
-  const prev0 = p0.current;
-  const prev1 = p1.current;
+  const prev0 = p0.current; const prev1 = p1.current;
   useEffect(() => { p0.current = value[0]; p1.current = value[1]; });
   return (
-    <div style={{ display: "flex", gap: 3 }}>
+    <div style={{ display: "flex", gap: 2, flexShrink: 0 }}>
       <FlipCard digit={value[0]} prev={prev0} />
       <FlipCard digit={value[1]} prev={prev1} />
     </div>
@@ -86,35 +89,33 @@ function CSTFlipClockBar() {
     return () => clearInterval(id);
   }, []);
 
+  const colon: React.CSSProperties = {
+    color: "rgba(255,255,255,0.9)",
+    fontSize: 16, fontWeight: 700, lineHeight: 1,
+    flexShrink: 0, width: 10, textAlign: "center",
+  };
+
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
       background: "#cc0000",
       display: "flex", alignItems: "center", justifyContent: "center",
-      gap: 10, padding: "5px 16px",
+      gap: 8,
+      padding: "4px 12px",
+      height: 40,
     }}>
       <span style={{
-        color: "rgba(255,255,255,0.8)", fontSize: 10, fontWeight: 700,
+        color: "rgba(255,255,255,0.75)", fontSize: 9, fontWeight: 700,
         letterSpacing: "0.15em", textTransform: "uppercase",
-        fontFamily: "sans-serif",
+        fontFamily: "sans-serif", flexShrink: 0,
       }}>CST</span>
-      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 3, flexShrink: 0 }}>
         <DigitPair value={time.hours} />
-        <span style={{ color: "#fff", fontSize: 20, fontWeight: 700, lineHeight: 1, marginBottom: 3 }}>:</span>
+        <span style={colon}>:</span>
         <DigitPair value={time.minutes} />
-        <span style={{ color: "#fff", fontSize: 20, fontWeight: 700, lineHeight: 1, marginBottom: 3 }}>:</span>
+        <span style={colon}>:</span>
         <DigitPair value={time.seconds} />
       </div>
-      <style>{`
-        @keyframes fcFlipTop {
-          0%   { transform: rotateX(0deg); }
-          100% { transform: rotateX(-90deg); }
-        }
-        @keyframes fcFlipBot {
-          0%   { transform: rotateX(90deg); }
-          100% { transform: rotateX(0deg); }
-        }
-      `}</style>
     </div>
   );
 }

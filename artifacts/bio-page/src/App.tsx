@@ -12,9 +12,9 @@ function getCST() {
   };
 }
 
-const CARD_W = 22;
-const CARD_H = 30;
-const FONT   = 19;
+const CARD_W = 24;
+const CARD_H = 32;
+const FONT   = 18;
 
 function FlipCard({ digit, prev }: { digit: string; prev: string }) {
   const [flipping, setFlipping] = useState(false);
@@ -33,11 +33,11 @@ function FlipCard({ digit, prev }: { digit: string; prev: string }) {
     background: "#1c1c1c",
     borderRadius: 4,
     display: "flex", alignItems: "center", justifyContent: "center",
-    paddingTop: 2,
     color: "#fff",
-    fontSize: FONT, fontWeight: 700,
-    fontFamily: "Arial, Helvetica, sans-serif",
-    lineHeight: 1,
+    fontSize: FONT, fontWeight: 800,
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    lineHeight: "1",
+    fontVariantNumeric: "tabular-nums",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.4)",
   };
 

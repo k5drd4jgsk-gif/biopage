@@ -308,7 +308,7 @@ export default function App() {
         {/* Name / handle */}
         <div style={{ textAlign: "center" }}>
           <div style={{ color: "#fff", fontSize: "clamp(22px, 5vw, 30px)", letterSpacing: "0.06em", fontFamily: "'QuorthonBlack', sans-serif", lineHeight: 1.1 }}>
-            dread
+            dread<br>Nowhere</br>
           </div>
           <div
             onClick={handleCopyUsername}

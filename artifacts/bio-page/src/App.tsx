@@ -3,13 +3,28 @@ import { flushSync } from "react-dom";
 
 /* ─── CST Flip Clock Notification Bar ─────────────────────── */
 
-function getCST() {
-  const cst = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Dubai" }));
+function getTime() {
+  const d = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Dubai" }));
   return {
-    hours:   cst.getHours().toString().padStart(2, "0"),
-    minutes: cst.getMinutes().toString().padStart(2, "0"),
-    seconds: cst.getSeconds().toString().padStart(2, "0"),
+    hours:   d.getHours().toString().padStart(2, "0"),
+    minutes: d.getMinutes().toString().padStart(2, "0"),
+    seconds: d.getSeconds().toString().padStart(2, "0"),
   };
+}
+
+// Schedules a callback to fire at the next exact second boundary,
+// then every second after. Returns a cleanup function.
+function startAccurateClock(cb: () => void): () => void {
+  let tid: ReturnType<typeof setTimeout>;
+  function tick() {
+    cb();
+    const msToNext = 1000 - (Date.now() % 1000);
+    tid = setTimeout(tick, msToNext);
+  }
+  // First fire: align to next second
+  const msToNext = 1000 - (Date.now() % 1000);
+  tid = setTimeout(tick, msToNext);
+  return () => clearTimeout(tid);
 }
 
 const CARD_W = 24;
@@ -84,10 +99,11 @@ function DigitPair({ value }: { value: string }) {
 }
 
 function CSTFlipClockBar() {
-  const [time, setTime] = useState(getCST);
+  const [time, setTime] = useState(getTime);
+  const [visible, setVisible] = useState(true);
+
   useEffect(() => {
-    const id = setInterval(() => setTime(getCST()), 1000);
-    return () => clearInterval(id);
+    return startAccurateClock(() => setTime(getTime()));
   }, []);
 
   const colon: React.CSSProperties = {
@@ -100,20 +116,56 @@ function CSTFlipClockBar() {
   };
 
   return (
-    <div style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
-      background: "#cc0000",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      height: 40,
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
-        <DigitPair value={time.hours} />
-        <span style={colon}>:</span>
-        <DigitPair value={time.minutes} />
-        <span style={colon}>:</span>
-        <DigitPair value={time.seconds} />
+    <>
+      {/* ── Main bar ── */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
+        background: "#cc0000",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        height: 40,
+        transform: visible ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 0.3s ease",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+          <DigitPair value={time.hours} />
+          <span style={colon}>:</span>
+          <DigitPair value={time.minutes} />
+          <span style={colon}>:</span>
+          <DigitPair value={time.seconds} />
+        </div>
+
+        {/* Hide button */}
+        <button
+          onClick={() => setVisible(false)}
+          title="Hide clock"
+          style={{
+            position: "absolute", right: 10,
+            background: "rgba(0,0,0,0.25)", border: "none",
+            color: "#fff", borderRadius: 4, cursor: "pointer",
+            width: 22, height: 22,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 13, lineHeight: 1, padding: 0,
+          }}
+        >✕</button>
       </div>
-    </div>
+
+      {/* ── Show-again tab ── */}
+      <button
+        onClick={() => setVisible(true)}
+        title="Show clock"
+        style={{
+          position: "fixed", top: 0, left: "50%",
+          transform: `translate(-50%, ${visible ? "-100%" : "0%"})`,
+          transition: "transform 0.3s ease",
+          zIndex: 9998,
+          background: "#cc0000", border: "none", cursor: "pointer",
+          color: "#fff", fontSize: 11, fontWeight: 700,
+          padding: "3px 14px 4px",
+          borderRadius: "0 0 6px 6px",
+          letterSpacing: "0.05em",
+        }}
+      >▼ clock</button>
+    </>
   );
 }
 

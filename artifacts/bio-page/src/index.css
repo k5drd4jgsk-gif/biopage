@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
 @font-face {
+  font-family: 'BFText';
+  src: url('/BF_TEXT_REGULAR.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
   font-family: 'QuorthonBlack';
   src: url('/QuorthonBlack.otf') format('opentype');
   font-weight: normal;

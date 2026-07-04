@@ -50,7 +50,7 @@ function FlipCard({ digit, prev }: { digit: string; prev: string }) {
     display: "flex", alignItems: "center", justifyContent: "center",
     color: "#fff",
     fontSize: FONT, fontWeight: 800,
-    fontFamily: "system-ui, -apple-system, sans-serif",
+    fontFamily: "'BFText', system-ui, sans-serif",
     lineHeight: "1",
     fontVariantNumeric: "tabular-nums",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.4)",
@@ -109,6 +109,7 @@ function CSTFlipClockBar() {
   const colon: React.CSSProperties = {
     color: "rgba(255,255,255,0.9)",
     fontSize: 18, fontWeight: 700,
+    fontFamily: "'BFText', system-ui, sans-serif",
     lineHeight: `${CARD_H}px`,
     height: CARD_H,
     flexShrink: 0, width: 10, textAlign: "center",

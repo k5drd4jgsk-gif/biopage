@@ -13,7 +13,7 @@ const PAGE_TITLE = "dread";
 
 // Favicon — paste any image URL, or use a file you've dropped into public/ (e.g. "/favicon.png")
 // Leave empty to keep the default
-const FAVICON_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
+const FAVICON_URL = "https://i.ibb.co/4ws57Vw6/IMG-6908.jpg";
 
 function getYouTubeId(url: string): string | null {
   if (!url) return null;

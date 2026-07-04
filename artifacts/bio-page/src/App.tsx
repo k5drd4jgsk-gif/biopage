@@ -180,7 +180,7 @@ const IMAGE_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
 const YOUTUBE_URL = "https://youtu.be/PBKTrq7PgkU?is=jMIY5YYSLmlwMcWi";
 
 // Browser tab title
-const PAGE_TITLE = "dread";
+const PAGE_TITLE = "ØD";
 
 // Favicon — paste any image URL, or use a file you've dropped into public/ (e.g. "/favicon.png")
 // Leave empty to keep the default

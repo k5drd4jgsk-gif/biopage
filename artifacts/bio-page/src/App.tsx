@@ -1,6 +1,126 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
+/* ─── CST Flip Clock Notification Bar ─────────────────────── */
+
+function getCST() {
+  const cst = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }));
+  return {
+    hours:   cst.getHours().toString().padStart(2, "0"),
+    minutes: cst.getMinutes().toString().padStart(2, "0"),
+    seconds: cst.getSeconds().toString().padStart(2, "0"),
+  };
+}
+
+function FlipCard({ digit, prev }: { digit: string; prev: string }) {
+  const [flipping, setFlipping] = useState(false);
+  const savedPrev = useRef(prev);
+
+  useEffect(() => {
+    if (digit !== savedPrev.current) {
+      setFlipping(true);
+      const t = setTimeout(() => { setFlipping(false); savedPrev.current = digit; }, 380);
+      return () => clearTimeout(t);
+    }
+  }, [digit]);
+
+  const cardStyle: React.CSSProperties = {
+    position: "relative", width: 28, height: 40, borderRadius: 5,
+    background: "transparent", perspective: 180,
+    display: "inline-block",
+  };
+  const halfBase: React.CSSProperties = {
+    position: "absolute", left: 0, width: "100%", height: "50%",
+    background: "#1a1a1a", color: "#fff",
+    fontSize: 22, fontWeight: 700, fontFamily: "'Courier New', Courier, monospace",
+    display: "flex", justifyContent: "center", overflow: "hidden",
+    backfaceVisibility: "hidden", borderRadius: 5,
+  };
+
+  return (
+    <div style={cardStyle}>
+      {/* Static top half */}
+      <div style={{ ...halfBase, top: 0, alignItems: "flex-end", borderBottom: "1px solid rgba(0,0,0,0.5)" }}>{digit}</div>
+      {/* Static bottom half */}
+      <div style={{ ...halfBase, bottom: 0, alignItems: "flex-start" }}>{digit}</div>
+
+      {flipping && <>
+        {/* Old top flips away */}
+        <div style={{
+          ...halfBase, top: 0, alignItems: "flex-end",
+          borderBottom: "1px solid rgba(0,0,0,0.5)",
+          transformOrigin: "bottom center",
+          animation: "fcFlipTop 0.38s ease-in forwards",
+          zIndex: 3,
+        }}>{savedPrev.current}</div>
+        {/* New bottom flips in */}
+        <div style={{
+          ...halfBase, bottom: 0, alignItems: "flex-start",
+          transformOrigin: "top center",
+          animation: "fcFlipBot 0.38s ease-out forwards",
+          zIndex: 3,
+        }}>{digit}</div>
+      </>}
+    </div>
+  );
+}
+
+function DigitPair({ value }: { value: string }) {
+  const p0 = useRef(value[0]);
+  const p1 = useRef(value[1]);
+  const prev0 = p0.current;
+  const prev1 = p1.current;
+  useEffect(() => { p0.current = value[0]; p1.current = value[1]; });
+  return (
+    <div style={{ display: "flex", gap: 3 }}>
+      <FlipCard digit={value[0]} prev={prev0} />
+      <FlipCard digit={value[1]} prev={prev1} />
+    </div>
+  );
+}
+
+function CSTFlipClockBar() {
+  const [time, setTime] = useState(getCST);
+  useEffect(() => {
+    const id = setInterval(() => setTime(getCST()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
+      background: "#cc0000",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      gap: 10, padding: "5px 16px",
+    }}>
+      <span style={{
+        color: "rgba(255,255,255,0.8)", fontSize: 10, fontWeight: 700,
+        letterSpacing: "0.15em", textTransform: "uppercase",
+        fontFamily: "sans-serif",
+      }}>CST</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <DigitPair value={time.hours} />
+        <span style={{ color: "#fff", fontSize: 20, fontWeight: 700, lineHeight: 1, marginBottom: 3 }}>:</span>
+        <DigitPair value={time.minutes} />
+        <span style={{ color: "#fff", fontSize: 20, fontWeight: 700, lineHeight: 1, marginBottom: 3 }}>:</span>
+        <DigitPair value={time.seconds} />
+      </div>
+      <style>{`
+        @keyframes fcFlipTop {
+          0%   { transform: rotateX(0deg); }
+          100% { transform: rotateX(-90deg); }
+        }
+        @keyframes fcFlipBot {
+          0%   { transform: rotateX(90deg); }
+          100% { transform: rotateX(0deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────── */
+
 const TELEGRAM_URL = "https://t.me/quietpsalm";
 const IMAGE_URL = "https://i.ibb.co/XqN6Q1d/IMG-6891.png";
 
@@ -274,7 +394,8 @@ export default function App() {
   const videoId = getYouTubeId(YOUTUBE_URL);
 
   return (
-    <div style={{ minHeight: "100dvh", background: "#000", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100dvh", background: "#000", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", paddingTop: 52 }}>
+      <CSTFlipClockBar />
       <FolderIntro onDone={() => setIntroComplete(true)} />
 
       {videoId && <YouTubeAudio videoId={videoId} />}

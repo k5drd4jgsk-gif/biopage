@@ -16,7 +16,7 @@ const PAGE_TITLE = "dread";
 const FAVICON_URL = "https://i.ibb.co/xqcpdmqJ/IMG-6909.jpg";
 
 // Location shown under the handle — leave empty to hide
-const LOCATION = "Belgrade, Serbia";
+const LOCATION = "Paradise";
 
 function getYouTubeId(url: string): string | null {
   if (!url) return null;

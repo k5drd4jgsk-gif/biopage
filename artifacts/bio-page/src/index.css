@@ -24,6 +24,24 @@
   font-display: swap;
 }
 
+.screentone-btn {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.screentone-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1px, transparent 1px);
+  background-size: 5px 5px;
+  background-position: 0 0;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  border-radius: inherit;
+}
+
 :root {
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;

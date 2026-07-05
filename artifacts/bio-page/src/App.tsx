@@ -521,6 +521,7 @@ export default function App() {
           href={TELEGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
+          className="screentone-btn"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
@@ -548,6 +549,7 @@ export default function App() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
+            className="screentone-btn"
             onMouseEnter={() => setGithubHovered(true)}
             onMouseLeave={() => setGithubHovered(false)}
             style={{

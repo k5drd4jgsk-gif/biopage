@@ -471,7 +471,7 @@ export default function App() {
           <div
             onMouseEnter={() => setClockVisible(true)}
             onMouseLeave={() => setClockVisible(false)}
-            style={{ color: "#fff", fontSize: "clamp(22px, 5vw, 30px)", letterSpacing: "0.06em", fontFamily: "'QuorthonBlack', sans-serif", lineHeight: 1.1, cursor: "default" }}
+            style={{ color: "#fff", fontSize: "clamp(22px, 5vw, 30px)", letterSpacing: "0.06em", fontFamily: "'FamiliesRound', sans-serif", lineHeight: 1.1, cursor: "default" }}
           >
             dread
           </div>

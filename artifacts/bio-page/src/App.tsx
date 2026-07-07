@@ -151,7 +151,7 @@ const PAGE_TITLE = "ØD";
 
 // Favicon — paste any image URL, or use a file you've dropped into public/ (e.g. "/favicon.png")
 // Leave empty to keep the default
-const FAVICON_URL = "https://i.ibb.co/xqcpdmqJ/IMG-6909.jpg";
+const FAVICON_URL = "https://i.ibb.co/9HrftrPz/fav.png";
 
 // Location shown under the handle — leave empty to hide
 const LOCATION = "Paradise";

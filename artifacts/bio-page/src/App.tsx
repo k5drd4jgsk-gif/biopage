@@ -380,32 +380,26 @@ export default function App() {
   const [xmrChange, setXmrChange] = useState<number | null>(null);
 
   useEffect(() => {
-    let ws: WebSocket;
-    let reconnectTimer: ReturnType<typeof setTimeout>;
+    let intervalId: ReturnType<typeof setInterval>;
 
-    function connect() {
-      ws = new WebSocket("wss://stream.binance.com:9443/ws/xmrusdt@ticker");
-      ws.onmessage = (e) => {
-        try {
-          const d = JSON.parse(e.data);
-          const price = parseFloat(d.c);
-          if (!isNaN(price)) {
-            setXmrPrice(price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-          }
-          const change = parseFloat(d.P);
-          if (!isNaN(change)) setXmrChange(change);
-        } catch {}
-      };
-      ws.onclose = () => {
-        reconnectTimer = setTimeout(connect, 3000);
-      };
+    async function fetchXmr() {
+      try {
+        const res = await fetch("https://api.kraken.com/0/public/Ticker?pair=XMRUSD");
+        const d = await res.json();
+        const ticker = d?.result?.XXMRZUSD;
+        if (ticker) {
+          const price = parseFloat(ticker.c[0]);
+          const open = parseFloat(ticker.o);
+          const changePct = ((price - open) / open) * 100;
+          setXmrPrice(price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+          setXmrChange(changePct);
+        }
+      } catch {}
     }
 
-    connect();
-    return () => {
-      clearTimeout(reconnectTimer);
-      ws?.close();
-    };
+    fetchXmr();
+    intervalId = setInterval(fetchXmr, 15000);
+    return () => clearInterval(intervalId);
   }, []);
 
   function handleCopyUsername() {

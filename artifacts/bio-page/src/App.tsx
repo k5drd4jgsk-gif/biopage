@@ -377,6 +377,7 @@ export default function App() {
   const [introComplete, setIntroComplete] = useState(false);
   const [clockVisible, setClockVisible] = useState(false);
   const [xmrPrice, setXmrPrice] = useState<string | null>(null);
+  const [xmrChange, setXmrChange] = useState<number | null>(null);
 
   useEffect(() => {
     let ws: WebSocket;
@@ -391,6 +392,8 @@ export default function App() {
           if (!isNaN(price)) {
             setXmrPrice(price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
           }
+          const change = parseFloat(d.P);
+          if (!isNaN(change)) setXmrChange(change);
         } catch {}
       };
       ws.onclose = () => {
@@ -519,6 +522,18 @@ export default function App() {
               }}>
                 ${xmrPrice}
               </span>
+              {xmrChange !== null && (
+                <span style={{
+                  fontFamily: "'FamiliesRound', sans-serif",
+                  fontWeight: 500,
+                  fontSize: "clamp(10px, 2vw, 12px)",
+                  color: xmrChange >= 0 ? "#4ade80" : "#f87171",
+                  letterSpacing: "0.04em",
+                  opacity: 0.9,
+                }}>
+                  {xmrChange >= 0 ? "+" : ""}{xmrChange.toFixed(2)}%
+                </span>
+              )}
             </div>
           )}
 
